@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="banner.png" alt="SOC LABS Banner" width="100%">
+</p>
+
 # 🛡️ SOC-LAB-001 - Wazuh Deployment
 
 > Deploying a complete Wazuh SIEM environment using Docker Compose, enrolling a Windows 11 endpoint, and validating centralized security event collection through the Threat Hunting module.
