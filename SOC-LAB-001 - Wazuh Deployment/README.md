@@ -44,7 +44,7 @@ The deployment was validated by confirming that all Wazuh services were running 
 
 ## Docker Containers
 
-![Docker Containers](Containers-status.png)
+![Docker Containers](containers-status.png)
 
 **Evidence**
 
@@ -59,7 +59,7 @@ The screenshot confirms that all Wazuh services are running successfully, includ
 
 ## Docker Compose Status
 
-![Docker Compose](screenshots/02-Docker-Compose-Status.png)
+![Docker Compose](docker-compose-status.png)
 
 **Evidence**
 
