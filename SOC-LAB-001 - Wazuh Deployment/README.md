@@ -44,7 +44,7 @@ The deployment was validated by confirming that all Wazuh services were running 
 
 ## Docker Containers
 
-![Docker Containers](screenshots/01-Docker-Containers.png)
+![Docker Containers](Containers-status.png)
 
 **Evidence**
 
