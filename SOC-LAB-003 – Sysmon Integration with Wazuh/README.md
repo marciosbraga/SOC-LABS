@@ -160,35 +160,45 @@ MITRE ATT&CK Mapping:
 
 ---
 
+
 # Skills Demonstrated
 
+- Microsoft Sysmon Deployment
 - Windows Event Monitoring
-- Microsoft Sysmon
-- Endpoint Telemetry
+- Endpoint Telemetry Collection
 - Wazuh Agent Configuration
+- Windows Event Log Collection
+- Event Decoding and Parsing
 - Wazuh Rule Analysis
-- Event Decoding
 - Threat Detection
+- SIEM Investigation
 - MITRE ATT&CK Mapping
 - Security Monitoring
-- SIEM Investigation
 
 ---
 
 # Key Takeaways
 
-This lab demonstrates the complete integration between Sysmon and Wazuh.
+This lab demonstrates the successful integration of Microsoft Sysmon with the Wazuh SIEM platform.
 
-The endpoint generated detailed Windows telemetry, the Wazuh Agent collected the events, the Wazuh Manager decoded the logs, applied detection rules, and mapped the activity to the MITRE ATT&CK framework.
+The Windows endpoint generated detailed telemetry through Sysmon. The Wazuh Agent successfully collected the generated events, while the Wazuh Manager decoded the logs, applied detection rules, and mapped the detected activity to the MITRE ATT&CK framework.
 
-This setup significantly improves endpoint visibility and enables analysts to investigate suspicious Windows activity with rich contextual information.
+The generated alert identified a suspicious command prompt execution and classified it under **MITRE ATT&CK T1059.003 – Windows Command Shell**, demonstrating how endpoint telemetry can be transformed into actionable security intelligence.
+
+This integration significantly improves endpoint visibility, strengthens threat detection capabilities, and enables SOC analysts to investigate suspicious Windows activity with rich contextual information.
 
 ---
 
-## Author
+# Author
 
 **Marcio Braga**
 
 Cybersecurity Student
 
 SOC Analyst | Blue Team | Wazuh | SIEM | Windows Security | AWS Cloud Security (Learning)
+
+Portugal 🇵🇹
+
+---
+
+⭐ If you found this project useful, consider giving this repository a star.
