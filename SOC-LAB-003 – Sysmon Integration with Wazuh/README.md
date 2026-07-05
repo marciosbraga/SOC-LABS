@@ -75,7 +75,7 @@ Sysmon was installed using the SwiftOnSecurity configuration file.
 
 The installation completed successfully and Windows immediately started generating Sysmon Event ID 1 (Process Creation) events.
 
-![Sysmon Installation](images/02-sysmon-installation-validation.png)
+![Sysmon Installation](02-sysmon-installation-validation.png)
 
 ---
 
@@ -92,7 +92,7 @@ The Wazuh Agent was configured to collect the Sysmon Operational log.
 
 After editing the configuration, the Wazuh Agent service was restarted.
 
-![Wazuh Configuration](images/03-ossec-conf-sysmon-configuration.png)
+![Wazuh Configuration](03-ossec-conf-sysmon-configuration.png)
 
 ---
 
@@ -111,7 +111,7 @@ The JSON output contains:
 - Process GUID
 - Timestamp
 
-![Sysmon JSON Evidence](images/06-sysmon-event-evidence-part1.png)
+![Sysmon JSON Evidence](06-sysmon-event-evidence-part1.png)
 
 ---
 
@@ -132,7 +132,7 @@ MITRE ATT&CK Mapping:
 |---------|-----------|----|
 | Execution | Windows Command Shell | T1059.003 |
 
-![Detection Rule](images/07-sysmon-event-evidence-part2.png)
+![Detection Rule](07-sysmon-event-evidence-part2.png)
 
 ---
 
