@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="images/banner.png" alt="SOC LABS Banner">
+  <img src="images/banner-lab-003.png" alt="LAB-003 - Sysmon Integration with Wazuh">
 </p>
 
 # LAB-003 – Sysmon Integration with Wazuh
