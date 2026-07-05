@@ -1,4 +1,12 @@
+<p align="center">
+  <img src="images/banner.png" alt="SOC LABS Banner">
+</p>
+
 # LAB-003 – Sysmon Integration with Wazuh
+
+Collecting Windows Sysmon events with the Wazuh Agent
+and detecting suspicious process creation
+(MITRE ATT&CK T1059.003)
 
 ## Overview
 
