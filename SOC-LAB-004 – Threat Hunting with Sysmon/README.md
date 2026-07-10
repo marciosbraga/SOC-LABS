@@ -25,9 +25,9 @@ The objective of this investigation was to determine whether the detected activi
 
 ## Initial Evidence
 
-The Wazuh SIEM detected the execution of a Windows Discovery command.
+Wazuh detected the execution of a Windows Discovery command on the monitored endpoint.
 
-The generated event indicates the creation of the following process:
+The generated event indicated the creation of the following process:
 
 **Process**
 
@@ -41,33 +41,35 @@ net1.exe
 net localgroup administrators
 ```
 
-This Windows command enumerates all members of the local **Administrators** group and is commonly used during system administration.
+This Windows command enumerates all members of the local **Administrators** group.
 
-Because attackers frequently execute this command during the **Discovery** phase after gaining access to a compromised host, Wazuh correctly generated an alert for further investigation.
+Although commonly used by system administrators, the same command is frequently executed by threat actors during the **Discovery** phase after compromising a Windows host.
+
+Because of this behavior, Wazuh generated an alert for analyst investigation.
 
 ---
 
 # Evidence
 
-## Figure 1 – Wazuh Alert Overview
+## Figure 1 – Process and Event Details
 
-![Figure 1 - Wazuh Alert Overview](alert-overview.png)
+![Figure 1 - Process and Event Details](case1-figure1-process-details.png)
 
-*Figure 1 shows the Wazuh alert summary, including the detection rule, severity, MITRE ATT&CK mapping, and the affected endpoint.*
+*Figure 1 presents the Sysmon process details collected by Wazuh, including the executed command, process image, parent process, user context, hashes, integrity level, and other technical attributes used during the investigation.*
 
 ---
 
-## Figure 2 – Event Details
+## Figure 2 – Wazuh Alert Summary
 
-![Figure 2 - Event Details](event-details.png)
+![Figure 2 - Wazuh Alert Summary](case1-figure2-alert-summary.png)
 
-*Figure 2 presents the Sysmon event details, including the executed command, process information, user context, hashes, and process identifiers used during the investigation.*
+*Figure 2 shows the Wazuh detection details, including the triggered rule, severity level, MITRE ATT&CK mapping, event metadata, and timestamp associated with the alert.*
 
 ---
 
 ## Investigation
 
-The investigation focused on validating the origin of the process and determining whether the activity was expected or potentially malicious.
+The investigation focused on validating the origin of the process and determining whether the detected activity represented legitimate administrative behavior or a potential security incident.
 
 ### Process Created
 
@@ -95,11 +97,13 @@ Marcio-Braga\yukem
 
 ### Process Purpose
 
-The command **net localgroup administrators** enumerates all local accounts that belong to the **Administrators** group.
+The command **net localgroup administrators** enumerates all user accounts that belong to the local **Administrators** group.
 
-Although this command is frequently executed by system administrators, it is also commonly observed during adversary reconnaissance following initial system compromise.
+This command is widely used by Windows administrators for legitimate management tasks.
 
-For this reason, security monitoring solutions frequently classify this activity as **Discovery**.
+However, it is also commonly observed during attacker reconnaissance, where adversaries attempt to identify privileged accounts before privilege escalation or lateral movement.
+
+For this reason, security monitoring solutions classify this activity under the **Discovery** tactic.
 
 ---
 
@@ -109,7 +113,7 @@ For this reason, security monitoring solutions frequently classify this activity
 |---------|-----------|----|
 | Discovery | Account Discovery | T1087 |
 
-The generated alert was correctly mapped to **MITRE ATT&CK T1087 – Account Discovery**, since the executed command attempts to enumerate privileged local accounts.
+The generated alert was correctly mapped to **MITRE ATT&CK T1087 – Account Discovery**, as the executed command attempts to enumerate privileged local accounts.
 
 ---
 
@@ -117,17 +121,25 @@ The generated alert was correctly mapped to **MITRE ATT&CK T1087 – Account Dis
 
 The investigation confirmed that the command was intentionally executed by the legitimate user **Marcio-Braga\yukem** during a controlled laboratory exercise.
 
-The parent-child process relationship was consistent with normal Windows behavior:
+The parent-child relationship followed the expected Windows execution flow:
 
 ```text
 net.exe
-        │
-        └── net1.exe
+    │
+    └── net1.exe
 ```
 
-No indicators of privilege escalation, persistence mechanisms, lateral movement, or additional suspicious processes were identified during the investigation.
+No indicators of:
 
-Although this command is commonly associated with attacker reconnaissance, its execution alone is insufficient to classify the activity as malicious.
+- Privilege Escalation
+- Persistence
+- Lateral Movement
+- Defense Evasion
+- Additional suspicious processes
+
+were identified during the investigation.
+
+Although this command is frequently associated with attacker reconnaissance, the surrounding context demonstrated that the activity was expected and legitimate.
 
 ---
 
@@ -147,47 +159,50 @@ Although this command is commonly associated with attacker reconnaissance, its e
 
 > **Why was this alert generated?**
 >
-> Wazuh detected the execution of the command `net localgroup administrators`, which is commonly associated with the **Discovery** phase of the MITRE ATT&CK framework. Attackers frequently use this command after gaining access to a system to identify users with administrative privileges.
+> Wazuh detected the execution of the command `net localgroup administrators`, which is commonly associated with the **Discovery** phase of the MITRE ATT&CK framework. Threat actors frequently execute this command to enumerate privileged local accounts after gaining initial access.
 >
 > **What evidence was collected?**
 >
-> The investigation gathered the executed command, process image, parent process, user context, timestamp, detection rule, severity level, and MITRE ATT&CK mapping.
+> The investigation analyzed the executed command, process image, parent process, user context, command line, timestamps, Sysmon Event ID, detection rule, severity level, and MITRE ATT&CK mapping.
 >
 > **What was investigated?**
 >
-> The process hierarchy (`net.exe → net1.exe`), the executed command, the user account, and the execution context were analyzed to determine whether the activity represented normal administrative behavior or potential attacker reconnaissance.
+> The parent-child process relationship (`net.exe → net1.exe`), execution context, user identity, and command purpose were reviewed to determine whether the activity represented normal system administration or attacker reconnaissance.
 >
 > **What led to the final decision?**
 >
-> The command was intentionally executed by the legitimate user **Marcio-Braga\yukem** during a controlled laboratory exercise. No additional suspicious behavior, persistence mechanisms, privilege escalation, or indicators of compromise were identified.
+> The command was intentionally executed by the legitimate user **Marcio-Braga\yukem** during a controlled SOC laboratory exercise. No additional suspicious behavior or indicators of compromise were observed before or after the event.
 >
 > **Final Decision**
 >
-> The alert was classified as a **Benign True Positive**. Wazuh correctly detected a behavior commonly associated with attacker reconnaissance; however, the surrounding context confirmed that the activity was legitimate.
+> The alert was classified as a **Benign True Positive**. Wazuh correctly detected a behavior associated with attacker reconnaissance, while the surrounding context confirmed that the activity was legitimate.
 
 ---
 
 ## Lessons Learned
 
-This investigation demonstrates that not every alert generated by a SIEM represents malicious activity.
+This investigation demonstrates that not every SIEM alert represents malicious activity.
 
-Commands such as **net localgroup administrators** are legitimate Windows administrative utilities but are also frequently used during the **Discovery** phase of cyber attacks.
+Administrative commands such as **net localgroup administrators** are legitimate Windows utilities but are also commonly abused during adversary reconnaissance.
 
-A SOC analyst should never rely solely on the detection rule. Instead, the investigation must consider:
+A SOC analyst should never base a conclusion solely on the triggered detection rule.
+
+Instead, the investigation should always correlate:
 
 - User context
 - Parent process
+- Process image
 - Command line
 - Process purpose
 - MITRE ATT&CK mapping
 - Overall execution context
 
-Only after correlating these elements is it possible to determine whether escalation is necessary.
+Only after correlating all available evidence can an analyst accurately determine whether escalation is required.
 
 ---
 
 ## Key Takeaway
 
-> **A SIEM generates alerts based on behavior, not intent.**
+> **A SIEM detects behaviors—not intentions.**
 >
-> The responsibility of a SOC analyst is to investigate the surrounding context, correlate the available evidence, and determine whether the observed behavior represents legitimate administrative activity or a genuine security incident.
+> The role of a SOC analyst is to investigate the surrounding context, correlate multiple sources of evidence, and determine whether the observed behavior represents legitimate administrative activity or an actual security incident.
