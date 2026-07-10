@@ -51,20 +51,19 @@ Because of this behavior, Wazuh generated an alert for analyst investigation.
 
 # Evidence
 
-## Figure 1 – Process and Event Details
+## Figure 1 –  Wazuh Alert Summary
 
-![Figure 1 - Process and Event Details](case1-figure1-process-details.png)
+![Figure 1 - Process and Event Details](case1-figure1-alert-summary.png)
 
-*Figure 1 presents the Sysmon process details collected by Wazuh, including the executed command, process image, parent process, user context, hashes, integrity level, and other technical attributes used during the investigation.*
+*Figure 1 presents the technical details of the process creation event collected by Sysmon and forwarded to Wazuh, including the executed command, process image, parent process, user context, integrity level, process identifiers, and cryptographic hashes.*
 
 ---
 
-## Figure 2 – Wazuh Alert Summary
+## Figure 2 – Process and Event Details
 
-![Figure 2 - Wazuh Alert Summary](case1-figure2-alert-summary.png)
+![Figure 2 - Wazuh Alert Summary](case1-figure2-process-details.png)
 
-*Figure 2 shows the Wazuh detection details, including the triggered rule, severity level, MITRE ATT&CK mapping, event metadata, and timestamp associated with the alert.*
-
+*Figure 2 presents the Wazuh alert metadata, including the detection rule, MITRE ATT&CK mapping, Event ID, decoder, provider information, timestamp, and additional event attributes used during the investigation.*
 ---
 
 ## Investigation
