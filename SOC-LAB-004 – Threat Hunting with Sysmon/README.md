@@ -1,207 +1,133 @@
-# Case Study 1 – Windows Discovery Activity
 
-## Scenario
+<p align="center">
+  <img src="banner-lab-004.png" alt="SOC LAB-004 - Threat Hunting with Sysmon">
+</p>
 
-During routine security monitoring, Wazuh generated an alert indicating that a Windows Discovery command had been executed on the monitored endpoint.
+# SOC-LAB-004 – Threat Hunting with Sysmon
 
-The objective of this investigation was to determine whether the detected activity represented legitimate administrative behavior or a potential security threat.
+## Overview
 
----
+This laboratory focuses on **Threat Hunting** using Microsoft Sysmon and Wazuh SIEM.
 
-## Alert Summary
+Unlike traditional alert monitoring, the objective of this lab is to investigate Windows events, understand why alerts were generated, validate the evidence, and determine whether the observed activity represents legitimate behavior or a potential security incident.
 
-| Field | Value |
-|--------|-------|
-| Timestamp | Jul 9, 2026 @ 20:07:53 |
-| Host | DESKTOP-MARCIO |
-| User | Marcio-Braga\yukem |
-| Event ID | 1 (Process Creation) |
-| Rule ID | 92031 |
-| Rule Description | Discovery activity executed |
-| Severity | 3 |
-| MITRE ATT&CK | T1087 – Account Discovery |
+Each investigation follows the methodology used by SOC analysts, including evidence collection, MITRE ATT&CK mapping, analyst assessment, and final verdict.
 
 ---
 
-## Initial Evidence
+## Objectives
 
-Wazuh detected the execution of a Windows Discovery command on the monitored endpoint.
-
-The generated event indicated the creation of the following process:
-
-**Process**
-
-```text
-net1.exe
-```
-
-**Executed Command**
-
-```cmd
-net localgroup administrators
-```
-
-This Windows command enumerates all members of the local **Administrators** group.
-
-Although commonly used by system administrators, the same command is frequently executed by threat actors during the **Discovery** phase after compromising a Windows host.
-
-Because of this behavior, Wazuh generated an alert for analyst investigation.
+- Perform Threat Hunting using Sysmon telemetry
+- Investigate Windows process creation events
+- Analyze PowerShell activity
+- Investigate suspicious file creation
+- Understand MITRE ATT&CK mappings
+- Practice evidence-based security investigations
+- Improve SOC analyst decision-making
 
 ---
 
-# Evidence
+# Lab Environment
 
-## Figure 1 –  Wazuh Alert Summary
-
-![Figure 1 - Process and Event Details](case1-figure1-alert-summary.png)
-
-*Figure 1 presents the technical details of the process creation event collected by Sysmon and forwarded to Wazuh, including the executed command, process image, parent process, user context, integrity level, process identifiers, and cryptographic hashes.*
-
----
-
-## Figure 2 – Process and Event Details
-
-![Figure 2 - Wazuh Alert Summary](case1-figure2-process-details.png)
-
-*Figure 2 presents the Wazuh alert metadata, including the detection rule, MITRE ATT&CK mapping, Event ID, decoder, provider information, timestamp, and additional event attributes used during the investigation.*
----
-
-## Investigation
-
-The investigation focused on validating the origin of the process and determining whether the detected activity represented legitimate administrative behavior or a potential security incident.
-
-### Process Created
-
-```text
-C:\Windows\System32\net1.exe
-```
-
-### Parent Process
-
-```text
-C:\Windows\System32\net.exe
-```
-
-### Executed Command
-
-```cmd
-net localgroup administrators
-```
-
-### User
-
-```text
-Marcio-Braga\yukem
-```
-
-### Process Purpose
-
-The command **net localgroup administrators** enumerates all user accounts that belong to the local **Administrators** group.
-
-This command is widely used by Windows administrators for legitimate management tasks.
-
-However, it is also commonly observed during attacker reconnaissance, where adversaries attempt to identify privileged accounts before privilege escalation or lateral movement.
-
-For this reason, security monitoring solutions classify this activity under the **Discovery** tactic.
+| Component | Technology |
+|-----------|------------|
+| Operating System | Windows 11 |
+| Endpoint Telemetry | Microsoft Sysmon |
+| SIEM | Wazuh |
+| Log Collection | Wazuh Agent |
+| Detection Engine | Wazuh Rules |
+| Threat Framework | MITRE ATT&CK |
 
 ---
 
-## MITRE ATT&CK Analysis
+# Investigation Methodology
 
-| Tactic | Technique | ID |
-|---------|-----------|----|
-| Discovery | Account Discovery | T1087 |
+Each case study follows the same investigation workflow:
 
-The generated alert was correctly mapped to **MITRE ATT&CK T1087 – Account Discovery**, as the executed command attempts to enumerate privileged local accounts.
-
----
-
-## Analyst Assessment
-
-The investigation confirmed that the command was intentionally executed by the legitimate user **Marcio-Braga\yukem** during a controlled laboratory exercise.
-
-The parent-child relationship followed the expected Windows execution flow:
-
-```text
-net.exe
-    │
-    └── net1.exe
-```
-
-No indicators of:
-
-- Privilege Escalation
-- Persistence
-- Lateral Movement
-- Defense Evasion
-- Additional suspicious processes
-
-were identified during the investigation.
-
-Although this command is frequently associated with attacker reconnaissance, the surrounding context demonstrated that the activity was expected and legitimate.
+1. Alert Detection
+2. Initial Evidence Collection
+3. Process Analysis
+4. Parent Process Analysis
+5. MITRE ATT&CK Mapping
+6. Analyst Assessment
+7. Final Verdict
+8. Lessons Learned
 
 ---
 
-## Analyst Verdict
+# Case Studies
 
-| Result | Classification |
-|----------|---------------|
-| ✅ Event Confirmed | Process creation successfully detected |
-| ✅ True Positive | The event actually occurred |
-| ✅ Legitimate Administrative Activity | Command executed intentionally |
-| ❌ Security Incident | Not confirmed |
-| ❌ Escalation Required | No |
+## Case Study 1 – Windows Discovery Activity
 
----
+Investigation of a Windows Discovery command executed using **net localgroup administrators**, mapped to **MITRE ATT&CK T1087 – Account Discovery**.
 
-## 🧠 Analyst's Thought Process
+➡️ **Open Case Study**
 
-> **Why was this alert generated?**
->
-> Wazuh detected the execution of the command `net localgroup administrators`, which is commonly associated with the **Discovery** phase of the MITRE ATT&CK framework. Threat actors frequently execute this command to enumerate privileged local accounts after gaining initial access.
->
-> **What evidence was collected?**
->
-> The investigation analyzed the executed command, process image, parent process, user context, command line, timestamps, Sysmon Event ID, detection rule, severity level, and MITRE ATT&CK mapping.
->
-> **What was investigated?**
->
-> The parent-child process relationship (`net.exe → net1.exe`), execution context, user identity, and command purpose were reviewed to determine whether the activity represented normal system administration or attacker reconnaissance.
->
-> **What led to the final decision?**
->
-> The command was intentionally executed by the legitimate user **Marcio-Braga\yukem** during a controlled SOC laboratory exercise. No additional suspicious behavior or indicators of compromise were observed before or after the event.
->
-> **Final Decision**
->
-> The alert was classified as a **Benign True Positive**. Wazuh correctly detected a behavior associated with attacker reconnaissance, while the surrounding context confirmed that the activity was legitimate.
+[Case-01-Windows-Discovery](Case-01-Windows-Discovery)
 
 ---
 
-## Lessons Learned
+## Case Study 2 – Encoded PowerShell Execution
 
-This investigation demonstrates that not every SIEM alert represents malicious activity.
+Investigation of a Base64-encoded PowerShell command executed using **-EncodedCommand**, mapped to **MITRE ATT&CK T1059.001 – PowerShell**.
 
-Administrative commands such as **net localgroup administrators** are legitimate Windows utilities but are also commonly abused during adversary reconnaissance.
+➡️ **Open Case Study**
 
-A SOC analyst should never base a conclusion solely on the triggered detection rule.
-
-Instead, the investigation should always correlate:
-
-- User context
-- Parent process
-- Process image
-- Command line
-- Process purpose
-- MITRE ATT&CK mapping
-- Overall execution context
-
-Only after correlating all available evidence can an analyst accurately determine whether escalation is required.
+[Case-02-Encoded-PowerShell](Case-02-Encoded-PowerShell)
 
 ---
 
-## Key Takeaway
+## Case Study 3 – Suspicious Process Creation
 
-> **A SIEM detects behaviors—not intentions.**
->
-> The role of a SOC analyst is to investigate the surrounding context, correlate multiple sources of evidence, and determine whether the observed behavior represents legitimate administrative activity or an actual security incident.
+Investigation of a suspicious Windows process creation event and validation of execution context.
+
+➡️ **Open Case Study**
+
+[Case-03-Process-Creation](Case-03-Process-Creation)
+
+---
+
+## Case Study 4 – Suspicious File Creation
+
+Investigation of file creation activity detected by Sysmon and analyzed by Wazuh.
+
+➡️ **Open Case Study**
+
+[Case-04-File-Creation](Case-04-File-Creation)
+
+---
+
+# Skills Demonstrated
+
+- Threat Hunting
+- Security Monitoring
+- SOC Investigation
+- Windows Event Analysis
+- Microsoft Sysmon
+- Wazuh SIEM
+- Process Analysis
+- PowerShell Investigation
+- MITRE ATT&CK Mapping
+- Incident Triage
+- Windows Forensics
+- Security Event Correlation
+
+---
+
+# Key Takeaways
+
+This laboratory demonstrates how Threat Hunting goes beyond simply reviewing alerts.
+
+Every alert was investigated by collecting evidence, analyzing process relationships, validating user context, mapping the activity to the MITRE ATT&CK framework, and determining whether the behavior represented legitimate administration or malicious activity.
+
+The objective is to replicate the analytical workflow performed by SOC analysts during real-world security investigations.
+
+---
+
+## Author
+
+**Marcio Braga**
+
+Cybersecurity Student
+
+SOC Analyst | Blue Team | Wazuh | SIEM | Windows Security | AWS Cloud Security (Learning)
