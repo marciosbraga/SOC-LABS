@@ -55,7 +55,7 @@ For this reason, Wazuh generated an alert for investigation.
 
 ## Figure 1 – File Creation Details
 
-![Figure 1 - File Creation Details](evidence/case4-figure1-file-details.png)
+![Figure 1 - File Creation Details](case4-figure1-file-details.png)
 
 *Figure 1 presents the Sysmon File Creation event collected by Wazuh, including the PowerShell process responsible for creating the file, the target filename (`update_agent.exe`), user context, process identifiers, timestamps, and additional forensic artifacts used during the investigation.*
 
@@ -63,7 +63,7 @@ For this reason, Wazuh generated an alert for investigation.
 
 ## Figure 2 – Wazuh Alert Summary
 
-![Figure 2 - Alert Summary](evidence/case4-figure2-alert-summary.png)
+![Figure 2 - Alert Summary](case4-figure2-alert-summary.png)
 
 *Figure 2 presents the Wazuh detection metadata, including the triggered detection rule (Rule ID 92203), severity level, Sysmon Event ID, MITRE ATT&CK mapping, decoder information, and timestamp associated with the generated alert.*
 
