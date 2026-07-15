@@ -4,11 +4,13 @@
 
 This lab demonstrates how to configure Azure Monitor Agent (AMA) together with a Data Collection Rule (DCR) to collect Windows Security Events from an Azure Virtual Machine and send them to an Azure Log Analytics Workspace.
 
-After configuring the monitoring pipeline, Kusto Query Language (KQL) queries were executed to validate that the security events were successfully ingested and available for analysis. This process represents a common task performed by Cloud Security Engineers and SOC Analysts when onboarding Windows servers into Microsoft Sentinel.
+After configuring the monitoring pipeline, Kusto Query Language (KQL) queries were executed to validate that Windows Security Events were successfully ingested and made available for investigation in Microsoft Sentinel.
+
+This implementation represents a common operational scenario performed by SOC Analysts and Cloud Security Engineers when onboarding Windows servers into a SIEM environment.
 
 ---
 
-## Objectives
+# Objectives
 
 - Deploy Azure Monitor Agent (AMA)
 - Configure a Data Collection Rule (DCR)
@@ -20,7 +22,7 @@ After configuring the monitoring pipeline, Kusto Query Language (KQL) queries we
 
 ---
 
-## Technologies Used
+# Technologies Used
 
 - Microsoft Azure
 - Azure Virtual Machine
@@ -34,7 +36,7 @@ After configuring the monitoring pipeline, Kusto Query Language (KQL) queries we
 
 ---
 
-## Environment
+# Environment
 
 | Component | Value |
 |------------|-------|
@@ -49,8 +51,8 @@ After configuring the monitoring pipeline, Kusto Query Language (KQL) queries we
 
 # Architecture
 
-```
-Windows Server VM
+```text
+Windows Server 2022 VM
         │
         ▼
 Azure Monitor Agent (AMA)
@@ -62,45 +64,48 @@ Data Collection Rule (DCR)
 Azure Log Analytics Workspace
         │
         ▼
+Microsoft Sentinel
+        │
+        ▼
 Kusto Query Language (KQL)
         │
         ▼
-Microsoft Sentinel
+Security Monitoring & Investigation
 ```
 
 ---
 
 # Implementation
 
-## Step 1 – Create the Azure Virtual Machine
+## Step 1 – Provision the Virtual Machine
 
-A Windows Server 2022 virtual machine was deployed in Azure and prepared for monitoring.
+A Windows Server 2022 virtual machine was deployed in Microsoft Azure to serve as the monitored endpoint.
 
 ---
 
 ## Step 2 – Install Azure Monitor Agent
 
-The Azure Monitor Agent (AMA) extension was installed on the virtual machine to enable telemetry collection.
+The Azure Monitor Agent (AMA) extension was installed to enable telemetry collection and communication with Azure Monitor.
 
 ---
 
-## Step 3 – Create the Data Collection Rule
+## Step 3 – Configure the Data Collection Rule
 
-A Data Collection Rule (DCR) was created to define which Windows Security Event Logs would be collected.
+A Data Collection Rule (DCR) was created to collect Windows Security Event Logs.
 
-The rule was configured to collect:
+The DCR was configured to collect:
 
-- Security Event Log
+- Windows Security Events
 
-The DCR was associated with the virtual machine to begin collecting telemetry.
+The rule was then associated with the virtual machine.
 
 ---
 
-## Step 4 – Validate Data Collection
+## Step 4 – Validate Log Collection
 
-After the configuration was completed, the SecurityEvent table began receiving Windows Security events.
+After the association was completed, Windows Security Events began to populate the **SecurityEvent** table inside Azure Log Analytics.
 
-Several KQL queries were executed to validate the ingestion process.
+KQL queries were executed to validate the successful ingestion of security logs.
 
 ---
 
@@ -117,11 +122,11 @@ SecurityEvent
 
 ### Result
 
-The query returned Windows Security Events collected from the monitored virtual machine, confirming that the Azure Monitor Agent was successfully forwarding security logs to Azure Log Analytics.
+The query returned Windows Security Events collected from the monitored virtual machine, confirming successful communication between Azure Monitor Agent and Azure Log Analytics.
 
-**Evidence**
+### Evidence
 
-`images/securityevent-take10.png`
+![Windows Security Events](images/securityevent-take10.png)
 
 ---
 
@@ -137,19 +142,11 @@ SecurityEvent
 
 ### Result
 
-The returned Event IDs confirmed that Windows Security auditing events were successfully collected and indexed within Azure Log Analytics.
+The returned Event IDs confirm that Windows Security auditing events are being successfully collected and indexed.
 
-Examples observed:
+### Evidence
 
-- Event ID 1100
-- Event ID 4616
-- Event ID 4634
-- Event ID 4673
-- Event ID 4688
-
-**Evidence**
-
-`images/securityevent-eventid-summary.png`
+![Security Event ID Summary](images/securityevent-eventid-summary.png)
 
 ---
 
@@ -164,25 +161,29 @@ Heartbeat
 
 ### Result
 
-Heartbeat telemetry confirmed that the Azure Monitor Agent was actively communicating with the Log Analytics Workspace.
+Heartbeat telemetry confirms that the Azure Monitor Agent is actively communicating with Azure Log Analytics.
 
-**Evidence**
+### Evidence
 
-`images/heartbeat-summary-by-computer.png`
+![Heartbeat Summary](images/heartbeat-summary-by-computer.png)
 
 ---
 
 ## Data Collection Rule
 
-The Data Collection Rule (DCR) was successfully created and associated with the monitored Azure Virtual Machine.
+The Data Collection Rule was successfully created and associated with the monitored virtual machine.
 
-The configuration defines which Windows Security Event Logs are collected and sent to Azure Log Analytics.
+### DCR Overview
 
-**Evidence**
+![DCR Overview](images/dcr-overview.png)
 
-- `images/dcr-overview.png`
-- `images/dcr-associated-resource.png`
-- `images/windows-event-collection.png`
+### Associated Resource
+
+![Associated Resource](images/dcr-associated-resource.png)
+
+### Windows Event Collection
+
+![Windows Event Collection](images/windows-event-collection.png)
 
 ---
 
@@ -195,9 +196,7 @@ SecurityEvent
 | take 10
 ```
 
----
-
-### Count Events by Event ID
+### Display Event Distribution
 
 ```kql
 SecurityEvent
@@ -205,14 +204,33 @@ SecurityEvent
 | order by EventID asc
 ```
 
----
-
-### Verify Azure Monitor Agent Connectivity
+### Verify Agent Connectivity
 
 ```kql
 Heartbeat
 | summarize count() by Computer
 ```
+
+---
+
+# Troubleshooting Journey
+
+During the implementation, Windows Security Events were not initially appearing in the **SecurityEvent** table.
+
+The investigation included validation of:
+
+- Azure Monitor Agent installation
+- Heartbeat telemetry
+- Data Collection Rule configuration
+- Virtual Machine association
+- Windows Security Event generation
+- Microsoft Sentinel connector configuration
+
+The root cause was identified as the absence of a Data Collection Rule created through the **Windows Security Events via AMA** connector.
+
+After creating the connector-managed DCR and associating it with the virtual machine, Windows Security Events were successfully ingested into Azure Log Analytics.
+
+This troubleshooting process provided valuable hands-on experience with Azure-native monitoring components and log ingestion workflows.
 
 ---
 
@@ -224,30 +242,49 @@ Heartbeat
 - Data Collection Rules (DCR)
 - Azure Log Analytics
 - Microsoft Sentinel
-- Windows Event Monitoring
-- Windows Security Logging
+- Windows Security Monitoring
+- Windows Event Logging
 - Kusto Query Language (KQL)
 - Cloud Monitoring
 - Cloud Security
 - SOC Operations
 - Security Event Analysis
+- Troubleshooting
 
 ---
 
 # Key Learning Outcomes
 
-Throughout this lab it was possible to understand the complete monitoring pipeline used by Microsoft Sentinel to ingest Windows Security Events from Azure Virtual Machines.
+Throughout this lab, the complete Azure-native monitoring pipeline was implemented and validated.
 
-The lab covered the installation of Azure Monitor Agent, the creation of Data Collection Rules, resource association, validation of telemetry, and querying collected events using Kusto Query Language.
+Key concepts practiced include:
 
-These activities closely represent operational tasks performed by Cloud Security Engineers and SOC Analysts responsible for onboarding Windows assets into enterprise SIEM environments.
+- Azure Monitor Agent deployment
+- Data Collection Rule configuration
+- Windows Security Event collection
+- Log Analytics validation
+- KQL querying
+- Microsoft Sentinel integration
+- Troubleshooting Azure Monitor data ingestion
+
+These activities closely resemble operational tasks performed by SOC Analysts and Cloud Security Engineers responsible for enterprise monitoring environments.
+
+---
+
+# References
+
+- Microsoft Learn – Azure Monitor Agent
+- Microsoft Learn – Data Collection Rules
+- Microsoft Learn – Azure Log Analytics
+- Microsoft Learn – Microsoft Sentinel
+- Microsoft Learn – Kusto Query Language (KQL)
 
 ---
 
 # Conclusion
 
-This lab successfully demonstrated how to deploy Azure Monitor Agent (AMA), configure Data Collection Rules (DCR), and collect Windows Security Events into Azure Log Analytics.
+This lab successfully demonstrated the deployment of Azure Monitor Agent (AMA), the configuration of a Data Collection Rule (DCR), and the collection of Windows Security Events into Azure Log Analytics.
 
-The collected data was validated using KQL queries, confirming successful event ingestion and agent connectivity through Heartbeat telemetry.
+The monitoring pipeline was validated using KQL queries and Heartbeat telemetry, confirming successful event ingestion into Microsoft Sentinel.
 
-This implementation provides the foundation required for security monitoring, threat detection, and incident investigation using Microsoft Sentinel.
+Beyond the technical implementation, this lab also reinforced troubleshooting methodologies used to diagnose and resolve log ingestion issues in Azure-native security monitoring environments.
