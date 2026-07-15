@@ -126,7 +126,7 @@ The query returned Windows Security Events collected from the monitored virtual 
 
 ### Evidence
 
-![Windows Security Events](images/securityevent-take10.png)
+![Windows Security Events](securityevent-take10.png)
 
 ---
 
@@ -146,7 +146,7 @@ The returned Event IDs confirm that Windows Security auditing events are being s
 
 ### Evidence
 
-![Security Event ID Summary](images/securityevent-eventid-summary.png)
+![Security Event ID Summary](securityevent-eventid-summary.png)
 
 ---
 
@@ -165,7 +165,7 @@ Heartbeat telemetry confirms that the Azure Monitor Agent is actively communicat
 
 ### Evidence
 
-![Heartbeat Summary](images/heartbeat-summary-by-computer.png)
+![Heartbeat Summary](heartbeat-summary-by-computer.png)
 
 ---
 
@@ -175,15 +175,15 @@ The Data Collection Rule was successfully created and associated with the monito
 
 ### DCR Overview
 
-![DCR Overview](images/dcr-overview.png)
+![DCR Overview](dcr-overview.png)
 
 ### Associated Resource
 
-![Associated Resource](images/dcr-associated-resource.png)
+![Associated Resource](dcr-associated-resource.png)
 
 ### Windows Event Collection
 
-![Windows Event Collection](images/windows-event-collection.png)
+![Windows Event Collection](windows-event-collection.png)
 
 ---
 
