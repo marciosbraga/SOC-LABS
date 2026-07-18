@@ -35,7 +35,7 @@ This lab aimed to explore Microsoft Defender for Cloud and understand how it ass
 
 ## 1. Microsoft Defender for Cloud Overview
 
-![Overview](images/01-defender-overview.png)
+![Overview](overview.png)
 
 The Overview dashboard provides a centralized view of the Azure security posture, displaying assessed resources, Secure Score, attack paths, security alerts, and compliance status.
 
@@ -50,7 +50,7 @@ The Overview dashboard provides a centralized view of the Azure security posture
 
 ## 2. Security Posture (Secure Score)
 
-![Security Posture](images/02-security-posture-secure-score.png)
+![Security Posture](security-posture.png)
 
 The Security Posture dashboard evaluates the overall security posture of the Azure environment.
 
@@ -67,7 +67,7 @@ This baseline will be used to measure future security improvements throughout th
 
 ## 3. Environment Settings
 
-![Environment Settings](images/03-environment-settings.png)
+![Environment Settings](environment-settings.png)
 
 Environment Settings centralizes Defender for Cloud configuration for the Azure subscription.
 
@@ -84,7 +84,7 @@ From this section it is possible to manage:
 
 ## 4. Defender Plans
 
-![Defender Plans](images/04-defender-plans.png)
+![Defender Plans](defender-plans.png)
 
 Microsoft Defender for Cloud separates its capabilities into two categories:
 
@@ -113,7 +113,7 @@ Premium plans were intentionally left disabled to keep the laboratory within the
 
 ## 5. Security Recommendations
 
-![Recommendations](images/05-security-recommendations.png)
+![Recommendations](recommendations.png)
 
 Microsoft Defender for Cloud automatically generated several security recommendations for the environment.
 
@@ -133,7 +133,7 @@ These recommendations will be implemented during future Azure Security Labs.
 
 ## 6. Regulatory Compliance
 
-![Regulatory Compliance](images/06-regulatory-compliance.png)
+![Regulatory Compliance](regulatory-compliance.png)
 
 Microsoft Defender for Cloud evaluates Azure resources against security frameworks.
 
@@ -151,7 +151,7 @@ This compliance baseline will be used to measure future improvements after imple
 
 ## 7. Resource Inventory
 
-![Inventory](images/07-resource-inventory.png)
+![Inventory](inventory.png)
 
 The Inventory dashboard automatically discovered all Azure resources currently deployed in the subscription.
 
