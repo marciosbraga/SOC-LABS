@@ -201,4 +201,17 @@ During this lab, I learned how Microsoft Defender for Cloud evaluates Azure reso
 
 ## LAB-009 – Microsoft Sentinel: Threat Detection & Analytics Rules
 
-The next lab will focus on deploying Microsoft Sentinel, connecting the Log Analytics Workspace, configuring data connectors, exploring Analytics Rules, and preparing the environment for threat detection and incident response.
+In the next lab, Microsoft Sentinel will be deployed and integrated with the existing Log Analytics Workspace (LAW-SOC-LABS) to establish the foundation of a cloud-native Security Information and Event Management (SIEM) solution.
+
+The lab will cover:
+
+- Deploying Microsoft Sentinel.
+- Connecting the Log Analytics Workspace to Microsoft Sentinel.
+- Exploring the Microsoft Sentinel interface and core features.
+- Configuring Data Connectors to collect security events.
+- Creating and analyzing Analytics Rules for threat detection.
+- Understanding Incidents, Alerts, and Investigation workflows.
+- Exploring Workbooks for security monitoring and visualization.
+- Preparing the environment for advanced threat hunting and incident response in subsequent labs.
+
+This lab establishes the foundation for the next stages of the Azure Security project, where real security events will be collected, analyzed, and investigated using Microsoft Sentinel.
